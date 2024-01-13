@@ -1,24 +1,34 @@
 import { Link } from 'react-router-dom';
 import useAuthContext from '../hooks/useAuthContext';
+import { ACTION_TYPES } from '../utils/actionTypes';
 import useLogout from '../hooks/useLogout';
 
 const Navbar = () => {
-  const { user } = useAuthContext();
+  const { dispatch, user, email, isFetching } = useAuthContext();
   const { logout } = useLogout();
+
+  const handleLinkClick = () => {
+    dispatch({ type: ACTION_TYPES.RESET });
+  };
 
   const handleLogout = async () => {
     await logout();
   };
 
   return (
-    <header className="flex items-center justify-between bg-white border-b-2 border-solid border-black px-4 py-2">
-      <Link to="/" className="text-3xl font-bold">
+    <header className="flex items-center justify-between bg-orange-300 border-b-2 border-solid border-black px-4 py-2">
+      <Link to="/" onClick={handleLinkClick} className="text-3xl font-bold">
         doodoo
       </Link>
       <nav className="text-sm">
-        {user ? (
+        {isFetching ? (
           <div className="flex items-center gap-4">
-            <p>email address</p>
+            <div className="w-20 h-6 bg-gray-100"></div>
+            <div className="w-20 h-6 bg-gray-100"></div>
+          </div>
+        ) : user ? (
+          <div className="flex items-center gap-4">
+            <p>{email}</p>
             <button
               type="button"
               onClick={handleLogout}
@@ -29,8 +39,12 @@ const Navbar = () => {
           </div>
         ) : (
           <div className="flex gap-4">
-            <Link to="/login">Login</Link>
-            <Link to="/register">Register</Link>
+            <Link to="/login" onClick={handleLinkClick}>
+              Login
+            </Link>
+            <Link to="/register" onClick={handleLinkClick}>
+              Register
+            </Link>
           </div>
         )}
       </nav>
