@@ -1,4 +1,5 @@
 import useAuthContext from './useAuthContext';
+import { ACTION_TYPES } from '../utils/actionTypes';
 
 const useLogout = () => {
   const { dispatch } = useAuthContext();
@@ -13,7 +14,7 @@ const useLogout = () => {
     });
 
     if (response.ok) {
-      dispatch({ type: 'LOGOUT' });
+      dispatch({ type: ACTION_TYPES.RESET });
     }
   };
 

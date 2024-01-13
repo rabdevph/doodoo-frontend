@@ -1,14 +1,11 @@
-import { useState } from 'react';
 import useAuthContext from './useAuthContext';
+import { ACTION_TYPES } from '../utils/actionTypes';
 
 const useLogin = () => {
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(null);
   const { dispatch } = useAuthContext();
 
   const login = async (email, password) => {
-    setIsLoading(true);
-    setError(null);
+    dispatch({ type: ACTION_TYPES.FETCH_START });
 
     const response = await fetch('http://localhost:8000/api/users/login', {
       method: 'POST',
@@ -22,16 +19,13 @@ const useLogin = () => {
     const data = await response.json();
 
     if (response.ok) {
-      console.log(data);
-      dispatch({ type: 'CHECK_SESSION', payload: data });
-      setIsLoading(false);
+      dispatch({ type: ACTION_TYPES.FETCH_SUCCESS, payload: data });
     } else {
-      setIsLoading(false);
-      setError(data.message);
+      dispatch({ type: ACTION_TYPES.FETCH_FAILED, payload: data });
     }
   };
 
-  return { login, isLoading, error };
+  return { login };
 };
 
 export default useLogin;

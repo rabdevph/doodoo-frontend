@@ -1,14 +1,11 @@
-import { useState } from 'react';
 import useAuthContext from './useAuthContext';
+import { ACTION_TYPES } from '../utils/actionTypes';
 
 const useRegister = () => {
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(null);
   const { dispatch } = useAuthContext();
 
   const register = async (name, email, password) => {
-    setIsLoading(true);
-    setError(null);
+    dispatch({ type: ACTION_TYPES.FETCH_START });
 
     const response = await fetch('http://localhost:8000/api/users/register', {
       method: 'POST',
@@ -22,16 +19,13 @@ const useRegister = () => {
     const data = await response.json();
 
     if (response.ok) {
-      console.log(response);
-      dispatch({ type: 'CHECK_SESSION', payload: data });
-      setIsLoading(false);
+      dispatch({ type: ACTION_TYPES.FETCH_SUCCESS, payload: data });
     } else {
-      setIsLoading(false);
-      setError(data.message);
+      dispatch({ type: ACTION_TYPES.FETCH_FAILED, payload: data });
     }
   };
 
-  return { register, isLoading, error };
+  return { register };
 };
 
 export default useRegister;
