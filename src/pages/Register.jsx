@@ -1,7 +1,12 @@
 import { useState } from 'react';
 import useRegister from '../hooks/useRegister';
-import Visible from '../assets/icons/visible.svg';
-import Invisible from '../assets/icons/invisible.svg';
+import Name from '../assets/icons/name.svg';
+import Email from '../assets/icons/email.svg';
+import Password from '../assets/icons/password.svg';
+import Visible from '../assets/icons/visibility_on.svg';
+import Invisible from '../assets/icons/visibility_off.svg';
+import useAuthContext from '../hooks/useAuthContext';
+import Loader from '../components/Loader.jsx';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -10,7 +15,8 @@ const Register = () => {
     password: '',
   });
   const [visible, setVisible] = useState(false);
-  const { register, isLoading, error } = useRegister();
+  const { register } = useRegister();
+  const { isFetching, isError, errorMessage } = useAuthContext();
 
   const handleInputChange = (e) => {
     setFormData((prevState) => ({
@@ -24,7 +30,6 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log('form submitted');
     await register(name, email, password);
   };
 
@@ -32,17 +37,20 @@ const Register = () => {
     setVisible(!visible);
   };
 
-  return (
-    <div className="flex flex-col gap-6 items-center bg-yellow-300 border-2 border-solid border-black p-8 shadow-common">
-      <h3 className="text-3xl font-bold">REGISTER</h3>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3 w-64 text-sm">
+  return isFetching ? (
+    <Loader />
+  ) : (
+    <div className="flex flex-col gap-6 items-center bg-yellow-300 border-2 border-solid border-black p-8">
+      <h3 className="text-2xl font-bold">REGISTER</h3>
+      <form id="registerForm" onSubmit={handleSubmit} className="flex flex-col gap-3 w-64 text-sm">
         <div className="flex flex-col gap-0.5">
-          <p className="font-semibold text-xs">NAME:</p>
-          <div className="border-[1px] bg-white border-solid border-black p-2">
+          <div className="flex items-center gap-2 border-[1px] bg-white border-solid border-black p-2">
+            <img src={Name} alt="" className="w-auto h-5" />
             <input
               id="name"
               type="text"
               name="name"
+              placeholder="Name"
               value={name}
               autoComplete="off"
               onChange={handleInputChange}
@@ -51,12 +59,13 @@ const Register = () => {
           </div>
         </div>
         <div className="flex flex-col gap-0.5">
-          <p className="font-semibold text-xs">EMAIL:</p>
-          <div className="border-[1px] bg-white border-solid border-black p-2">
+          <div className="flex items-center gap-2 border-[1px] bg-white border-solid border-black p-2">
+            <img src={Email} alt="" className="w-auto h-5" />
             <input
               id="email"
               type="text"
               name="email"
+              placeholder="Email"
               value={email}
               autoComplete="off"
               onChange={handleInputChange}
@@ -65,8 +74,8 @@ const Register = () => {
           </div>
         </div>
         <div className="flex flex-col gap-0.5">
-          <p className="font-semibold text-xs">PASSWORD:</p>
-          <div className="flex gap-1 border-[1px] bg-white border-solid border-black p-2">
+          <div className="flex gap-2 border-[1px] bg-white border-solid border-black p-2">
+            <img src={Password} alt="" className="w-auto h-5" />
             <input
               id="password"
               type={visible ? 'text' : 'password'}
@@ -83,12 +92,12 @@ const Register = () => {
         </div>
         <input
           type="submit"
-          value="SUBMIT"
-          className="border-[1px] bg-blue-500 border-solid border-black text-white font-semibold p-2"
+          value="REGISTER"
+          className="border-[1px] bg-blue-500 border-solid border-black cursor-pointer text-white font-semibold p-2"
         />
-        {error ? (
-          <div className="bg-white border-solid border-[1px] border-red-500 text-red-500 text-[10px] px-2 py-0.5">
-            {error}
+        {isError ? (
+          <div className="bg-white border-solid border-[1px] border-red-500 text-red-500 font-semibold text-[11px] px-2 py-0.5">
+            {errorMessage}
           </div>
         ) : null}
       </form>
