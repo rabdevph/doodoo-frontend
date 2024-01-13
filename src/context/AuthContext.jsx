@@ -1,32 +1,62 @@
-import { createContext, useReducer, useEffect, useState } from 'react';
+import { createContext, useReducer, useEffect } from 'react';
+import { ACTION_TYPES } from '../utils/actionTypes';
+
+const initialState = {
+  user: null,
+  email: null,
+  hasSessionToken: false,
+  isFetching: false,
+  isError: false,
+  errorMessage: '',
+};
 
 const AuthContext = createContext();
 
 const authReducer = (state, action) => {
   switch (action.type) {
-    case 'CHECK_SESSION':
-      console.log(`dispatch 'CHECK_SESSION' action`);
-      return { user: action.payload._id, hasAccessToken: action.payload.hasAccessToken };
-    case 'LOGOUT':
-      console.log(`dispatch 'LOGOUT' action`);
-      return { user: null, hasAccessToken: false };
+    case ACTION_TYPES.FETCH_START:
+      return {
+        ...state,
+        isFetching: true,
+      };
+    case ACTION_TYPES.FETCH_SUCCESS:
+      return {
+        user: action.payload._id,
+        email: action.payload.email,
+        hasSessionToken: action.payload.hasSessionToken,
+        isFetching: false,
+        isError: false,
+        errorMessage: '',
+      };
+    case ACTION_TYPES.FETCH_FAILED:
+      return {
+        ...state,
+        isFetching: false,
+        isError: true,
+        errorMessage: action.payload.message,
+      };
+    case ACTION_TYPES.RESET:
+      return {
+        user: null,
+        email: null,
+        hasSessionToken: false,
+        isFetching: false,
+        isError: false,
+        errorMessage: '',
+      };
     default:
       return state;
   }
 };
 
 const AuthContextProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(authReducer, {
-    user: null,
-    hasAccessToken: false,
-    isFetching: false,
-  });
-  const [isFetching, setIsFetching] = useState(null);
+  const [state, dispatch] = useReducer(authReducer, initialState);
 
   useEffect(() => {
     const getUser = async () => {
-      setIsFetching(true);
-      const response = await fetch('http://localhost:8000/api/users/hasAccessToken', {
+      dispatch({ type: ACTION_TYPES.FETCH_START });
+
+      const response = await fetch('http://localhost:8000/api/users/session-token', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -34,26 +64,23 @@ const AuthContextProvider = ({ children }) => {
         credentials: 'include',
       });
 
+      if (!response.ok) {
+        dispatch({ type: ACTION_TYPES.FETCH_FAILED });
+      }
+
       const data = await response.json();
 
       if (response.ok) {
-        console.log(`Successfully fetched data.`);
-        dispatch({ type: 'CHECK_SESSION', payload: data });
-        setIsFetching(false);
+        dispatch({ type: ACTION_TYPES.FETCH_SUCCESS, payload: data });
       } else {
-        console.log(`Error fetching data.`);
-        setIsFetching(false);
+        dispatch({ type: ACTION_TYPES.FETCH_FAILED });
       }
     };
 
     getUser();
   }, []);
 
-  return (
-    <AuthContext.Provider value={{ ...state, dispatch, isFetching }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ ...state, dispatch }}>{children}</AuthContext.Provider>;
 };
 
 export { AuthContext, AuthContextProvider };
