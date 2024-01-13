@@ -4,16 +4,13 @@ import Navbar from './components/Navbar.jsx';
 import Home from './pages/Home.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
-import Loader from './components/Loader.jsx';
 
 const App = () => {
-  const { user, isFetching } = useAuthContext();
+  const { user } = useAuthContext();
 
-  return isFetching ? (
-    <Loader />
-  ) : (
-    <div className="app | flex flex-col items-center font-mono h-screen w-full py-4">
-      <div className="wrapper | flex flex-col h-full w-[768px] border-2 border-solid border-black ">
+  return (
+    <div className="app | flex flex-col items-center justify-center font-mono h-screen w-full">
+      <div className="wrapper | flex flex-col h-[480px] w-[768px] border-2 border-solid border-black">
         <div>
           <Navbar />
         </div>
