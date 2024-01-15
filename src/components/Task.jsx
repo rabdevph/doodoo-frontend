@@ -58,24 +58,32 @@ const Task = ({ task }) => {
 
   return (
     <div
-      className={`task-container | flex items-center gap-4 ${taskBgColor()} p-2 border-2 border-solid border-black shadow-common`}
+      className={`task-wrapper | grid grid-cols-[max-content,1fr,max-content] grid-rows-[max-content,max-content] gap-x-2 gap-y-1 ${taskBgColor()} p-2 border-2 border-solid border-black shadow-common`}
     >
       <button
         id="checkbox"
         type="button"
         onClick={handleClickCheckbox}
-        className={`${taskCheckboxBg} border-2 border-solid border-black w-4 h-4 rounded-full`}
+        className={`${taskCheckboxBg} self-start border-2 border-solid border-black w-3.5 h-3.5 rounded-full`}
       ></button>
-      <div className="flex-1 flex items-center">
-        <div className="flex-1">
-          <p className={taskTextClass}>{task.description}</p>
-          <p className="text-[10px]">
-            {formatDistanceToNow(new Date(task.createdAt), { addSuffix: true })}
-          </p>
-        </div>
-        <button type="button" className="w-4 h-4" onClick={handleClickDelete}>
-          <img src={Delete} alt="" />
-        </button>
+
+      <div className="description-wrapper | flex items-center">
+        <p className={`${taskTextClass} whitespace-pre-line break-all`}>{task.description}</p>
+      </div>
+
+      <button
+        id="delete"
+        type="button"
+        className="opacity-75 hover:opacity-100 self-start w-4 h-4"
+        onClick={handleClickDelete}
+      >
+        <img src={Delete} alt="" />
+      </button>
+
+      <div className="create-at-wrapper col-start-2">
+        <p className="text-[10px] leading-3">
+          {formatDistanceToNow(new Date(task.createdAt), { addSuffix: true })}
+        </p>
       </div>
     </div>
   );
