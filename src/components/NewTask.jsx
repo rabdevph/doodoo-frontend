@@ -3,7 +3,7 @@ import useTaskContext from '../hooks/useTaskContext';
 import { ACTION_TYPES } from '../utils/actionTypes';
 
 const NewTask = ({ toggleNewTaskVisibility }) => {
-  const { dispatch } = useTaskContext();
+  const { dispatch, isError, errorFields, errorMessage } = useTaskContext();
   const [description, setDescription] = useState('');
   const [priorityLevel, setPriorityLevel] = useState('low');
 
@@ -30,6 +30,8 @@ const NewTask = ({ toggleNewTaskVisibility }) => {
       setDescription('');
       setPriorityLevel('low');
       toggleNewTaskVisibility();
+    } else {
+      dispatch({ type: ACTION_TYPES.FETCH_FAILED, payload: data });
     }
   };
 
@@ -37,9 +39,16 @@ const NewTask = ({ toggleNewTaskVisibility }) => {
     setPriorityLevel(priority);
   };
 
+  const descriptionClass = 'border-black bg-gray-100';
+  const descriptionErrorClass = 'border-red-500 bg-red-100';
+
   return (
     <div className="new-task-form-wrapper | flex flex-col items-center gap-4 h-[338px] w-full bg-white border-2 border-solid border-black p-4">
-      <p className="label | font-semibold">Create new task</p>
+      {isError ? (
+        <div className="label | font-semibold text-red-500">{errorMessage}</div>
+      ) : (
+        <div className="label | font-semibold">Create new task</div>
+      )}
       <form
         id="newTaskForm"
         onSubmit={handleFormSubmit}
@@ -49,7 +58,9 @@ const NewTask = ({ toggleNewTaskVisibility }) => {
           id="description"
           onChange={(e) => setDescription(e.target.value)}
           value={description}
-          className="flex-1 bg-gray-100 border-2 border-solid border-black focus:outline-none resize-none w-full p-2"
+          className={`flex-1 border-2 border-solid ${
+            errorFields.includes('description') ? descriptionErrorClass : descriptionClass
+          } focus:outline-none resize-none w-full p-2`}
         ></textarea>
         <div className="new-task-control-wrapper | flex items-center justify-between">
           <div className="flex items-center gap-2">

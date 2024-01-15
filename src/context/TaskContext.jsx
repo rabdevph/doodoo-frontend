@@ -5,6 +5,7 @@ const initialState = {
   tasks: null,
   isFetching: false,
   isError: false,
+  errorFields: [],
   errorMessage: '',
 };
 
@@ -17,12 +18,18 @@ const taskReducer = (state, action) => {
         ...state,
         tasks: action.payload,
         isFetching: false,
+        isError: false,
+        errorFields: [],
+        errorMessage: '',
       };
     case ACTION_TYPES.CREATE_TASK:
       return {
         ...state,
         tasks: [action.payload, ...state.tasks],
         isFetching: false,
+        isError: false,
+        errorFields: [],
+        errorMessage: '',
       };
     case ACTION_TYPES.UPDATE_TASK:
       return {
@@ -34,12 +41,18 @@ const taskReducer = (state, action) => {
           return t;
         }),
         isFetching: false,
+        isError: false,
+        errorFields: [],
+        errorMessage: '',
       };
     case ACTION_TYPES.DELETE_TASK:
       return {
         ...state,
         tasks: state.tasks.filter((t) => t._id !== action.payload._id),
         isFetching: false,
+        isError: false,
+        errorFields: [],
+        errorMessage: '',
       };
     case ACTION_TYPES.FETCH_START:
       return {
@@ -51,13 +64,14 @@ const taskReducer = (state, action) => {
         ...state,
         isFetching: false,
         isError: true,
+        errorFields: action.payload.errorFields,
         errorMessage: action.payload.message,
       };
     case ACTION_TYPES.RESET:
       return {
-        tasks: null,
-        isFetching: false,
+        ...state,
         isError: false,
+        errorFields: [],
         errorMessage: '',
       };
     default:
