@@ -16,7 +16,7 @@ const Register = () => {
   });
   const [visible, setVisible] = useState(false);
   const { register } = useRegister();
-  const { isFetching, isError, errorMessage } = useAuthContext();
+  const { isFetching, isError, errorFields, errorMessage } = useAuthContext();
 
   const handleInputChange = (e) => {
     setFormData((prevState) => ({
@@ -37,6 +37,9 @@ const Register = () => {
     setVisible(!visible);
   };
 
+  const inputWrapperClass = 'border-black bg-white';
+  const inputErrorWrapperClass = 'border-red-500 bg-red-100';
+
   return isFetching ? (
     <Loader />
   ) : (
@@ -44,7 +47,11 @@ const Register = () => {
       <h3 className="text-2xl font-bold">REGISTER</h3>
       <form id="registerForm" onSubmit={handleSubmit} className="flex flex-col gap-3 w-64 text-sm">
         <div className="flex flex-col gap-0.5">
-          <div className="flex items-center gap-2 border-[1px] bg-white border-solid border-black p-2">
+          <div
+            className={`flex items-center gap-2 border-[1px] ${
+              errorFields.includes('name') ? inputErrorWrapperClass : inputWrapperClass
+            } border-solid p-2`}
+          >
             <img src={Name} alt="" className="w-auto h-5" />
             <input
               id="name"
@@ -59,7 +66,11 @@ const Register = () => {
           </div>
         </div>
         <div className="flex flex-col gap-0.5">
-          <div className="flex items-center gap-2 border-[1px] bg-white border-solid border-black p-2">
+          <div
+            className={`flex items-center gap-2 border-[1px] ${
+              errorFields.includes('email') ? inputErrorWrapperClass : inputWrapperClass
+            } border-solid p-2`}
+          >
             <img src={Email} alt="" className="w-auto h-5" />
             <input
               id="email"
@@ -74,12 +85,17 @@ const Register = () => {
           </div>
         </div>
         <div className="flex flex-col gap-0.5">
-          <div className="flex gap-2 border-[1px] bg-white border-solid border-black p-2">
+          <div
+            className={`flex items-center gap-2 border-[1px] ${
+              errorFields.includes('password') ? inputErrorWrapperClass : inputWrapperClass
+            } border-solid p-2`}
+          >
             <img src={Password} alt="" className="w-auto h-5" />
             <input
               id="password"
               type={visible ? 'text' : 'password'}
               name="password"
+              placeholder="Password"
               value={password}
               autoComplete="off"
               onChange={handleInputChange}
@@ -93,10 +109,11 @@ const Register = () => {
         <input
           type="submit"
           value="REGISTER"
+          disabled={isFetching}
           className="border-[1px] bg-blue-500 border-solid border-black cursor-pointer text-white font-semibold p-2"
         />
         {isError ? (
-          <div className="bg-white border-solid border-[1px] border-red-500 text-red-500 font-semibold text-[11px] px-2 py-0.5">
+          <div className="bg-red-100 border-solid border-[1px] border-red-500 text-red-500 font-semibold text-[11px] px-2 py-0.5">
             {errorMessage}
           </div>
         ) : null}

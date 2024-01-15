@@ -7,6 +7,7 @@ const initialState = {
   hasSessionToken: false,
   isFetching: false,
   isError: false,
+  errorFields: [],
   errorMessage: '',
 };
 
@@ -26,6 +27,7 @@ const authReducer = (state, action) => {
         hasSessionToken: action.payload.hasSessionToken,
         isFetching: false,
         isError: false,
+        errorFields: [],
         errorMessage: '',
       };
     case ACTION_TYPES.FETCH_FAILED:
@@ -33,6 +35,7 @@ const authReducer = (state, action) => {
         ...state,
         isFetching: false,
         isError: true,
+        errorFields: action.payload.errorFields,
         errorMessage: action.payload.message,
       };
     case ACTION_TYPES.RESET:
@@ -42,6 +45,7 @@ const authReducer = (state, action) => {
         hasSessionToken: false,
         isFetching: false,
         isError: false,
+        errorFields: [],
         errorMessage: '',
       };
     default:
@@ -64,16 +68,12 @@ const AuthContextProvider = ({ children }) => {
         credentials: 'include',
       });
 
-      if (!response.ok) {
-        dispatch({ type: ACTION_TYPES.FETCH_FAILED });
-      }
-
       const data = await response.json();
 
       if (response.ok) {
         dispatch({ type: ACTION_TYPES.FETCH_SUCCESS, payload: data });
       } else {
-        dispatch({ type: ACTION_TYPES.FETCH_FAILED });
+        dispatch({ type: ACTION_TYPES.FETCH_FAILED, payload: data });
       }
     };
 

@@ -13,7 +13,7 @@ const Login = () => {
     password: '',
   });
   const [visible, setVisible] = useState(false);
-  const { isFetching, isError, errorMessage } = useAuthContext();
+  const { isFetching, isError, errorFields, errorMessage } = useAuthContext();
   const { login } = useLogin();
 
   const handleInputChange = (e) => {
@@ -35,6 +35,9 @@ const Login = () => {
     setVisible(!visible);
   };
 
+  const inputWrapperClass = 'border-black bg-white';
+  const inputErrorWrapperClass = 'border-red-500 bg-red-100';
+
   return isFetching ? (
     <Loader />
   ) : (
@@ -42,7 +45,11 @@ const Login = () => {
       <h3 className="text-2xl font-bold">LOGIN</h3>
       <form id="loginForm" onSubmit={handleSubmit} className="flex flex-col gap-3 w-64 text-sm">
         <div className="flex flex-col gap-0.5">
-          <div className="flex items-center gap-2 border-[1px] bg-white border-solid border-black p-2">
+          <div
+            className={`flex items-center gap-2 border-[1px] ${
+              errorFields.includes('email') ? inputErrorWrapperClass : inputWrapperClass
+            } border-solid p-2`}
+          >
             <img src={Email} alt="" className="w-auto h-5" />
             <input
               id="email"
@@ -57,7 +64,11 @@ const Login = () => {
           </div>
         </div>
         <div className="flex flex-col gap-0.5">
-          <div className="flex items-center gap-2 border-[1px] bg-white border-solid border-black p-2">
+          <div
+            className={`flex items-center gap-2 border-[1px] ${
+              errorFields.includes('password') ? inputErrorWrapperClass : inputWrapperClass
+            } border-solid p-2`}
+          >
             <img src={Password} alt="" className="w-auto h-5" />
             <input
               id="password"
@@ -77,6 +88,7 @@ const Login = () => {
         <input
           type="submit"
           value="LOGIN"
+          disabled={isFetching}
           className="border-[1px] bg-blue-500 border-solid border-black cursor-pointer text-white font-semibold p-2"
         />
         {isError ? (
