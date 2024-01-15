@@ -92,7 +92,7 @@ const Login = () => {
           className="border-[1px] bg-blue-500 border-solid border-black cursor-pointer text-white font-semibold p-2"
         />
         {isError ? (
-          <div className="bg-white border-solid border-[1px] border-red-500 text-red-500 font-semibold text-[11px] px-2 py-0.5">
+          <div className="bg-white border-solid border-[1px] border-red-500 text-red-500 font-semibold text-[11px] leading-3 p-2">
             {errorMessage}
           </div>
         ) : null}
