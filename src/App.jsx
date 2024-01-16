@@ -4,6 +4,7 @@ import Navbar from './components/Navbar.jsx';
 import Home from './pages/Home.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
+import NotFound from './pages/NotFound.jsx';
 
 const App = () => {
   const { user } = useAuthContext();
@@ -19,6 +20,7 @@ const App = () => {
             <Route path="/" element={user ? <Home /> : <Navigate to="/login" />} />
             <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
             <Route path="/register" element={user ? <Navigate to="/" /> : <Register />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
       </div>
