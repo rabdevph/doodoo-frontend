@@ -5,6 +5,7 @@ import Home from './pages/Home.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import NotFound from './pages/NotFound.jsx';
+import Verify from './pages/Verify.jsx';
 
 const App = () => {
   const { user } = useAuthContext();
@@ -20,6 +21,7 @@ const App = () => {
             <Route path="/" element={user ? <Home /> : <Navigate to="/login" />} />
             <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
             <Route path="/register" element={user ? <Navigate to="/" /> : <Register />} />
+            <Route path="/verify/:userToken" element={user ? <Navigate to="/" /> : <Verify />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
