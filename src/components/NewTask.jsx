@@ -7,12 +7,11 @@ const NewTask = ({ toggleNewTaskVisibility }) => {
   const [description, setDescription] = useState('');
   const [priorityLevel, setPriorityLevel] = useState('low');
 
-  const newTask = { description, priorityLevel, progress: 'pending' };
+  const newTask = { description, priorityLevel };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-
-    dispatch({ type: ACTION_TYPES.FETCH_START });
+    dispatch({ type: ACTION_TYPES.CREATE_TASK_REQUEST });
 
     const response = await fetch(`http://localhost:8000/api/tasks`, {
       method: 'POST',
@@ -26,12 +25,12 @@ const NewTask = ({ toggleNewTaskVisibility }) => {
     const data = await response.json();
 
     if (response.ok) {
-      dispatch({ type: ACTION_TYPES.CREATE_TASK, payload: data });
+      dispatch({ type: ACTION_TYPES.CREATE_TASK_SUCCEED, payload: data });
       setDescription('');
       setPriorityLevel('low');
       toggleNewTaskVisibility();
     } else {
-      dispatch({ type: ACTION_TYPES.FETCH_FAILED, payload: data });
+      dispatch({ type: ACTION_TYPES.CREATE_TASK_FAILED, payload: data });
     }
   };
 

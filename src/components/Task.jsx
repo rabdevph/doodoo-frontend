@@ -7,8 +7,8 @@ const Task = ({ task }) => {
   const { dispatch } = useTaskContext();
 
   const handleClickCheckbox = async () => {
+    dispatch({ type: ACTION_TYPES.UPDATE_TASK_REQUEST });
     const taskProgress = task.progress === 'pending' ? 'completed' : 'pending';
-
     const updatedProgress = { progress: taskProgress };
 
     const response = await fetch(`http://localhost:8000/api/tasks/${task._id}`, {
@@ -23,20 +23,28 @@ const Task = ({ task }) => {
     const data = await response.json();
 
     if (response.ok) {
-      dispatch({ type: ACTION_TYPES.UPDATE_TASK, payload: data });
+      dispatch({ type: ACTION_TYPES.UPDATE_TASK_SUCCEED, payload: data });
+    } else {
+      dispatch({ type: ACTION_TYPES.UPDATE_TASK_FAILED, payload: data });
     }
   };
 
   const handleClickDelete = async () => {
+    dispatch({ type: ACTION_TYPES.DELETE_TASK_REQUEST });
     const response = await fetch(`http://localhost:8000/api/tasks/${task._id}`, {
       method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       credentials: 'include',
     });
 
     const data = await response.json();
 
     if (response.ok) {
-      dispatch({ type: ACTION_TYPES.DELETE_TASK, payload: data });
+      dispatch({ type: ACTION_TYPES.DELETE_TASK_SUCCEED, payload: data });
+    } else {
+      dispatch({ type: ACTION_TYPES.DELETE_TASK_FAILED, payload: data });
     }
   };
 

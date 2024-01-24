@@ -11,12 +11,13 @@ const Home = () => {
 
   const toggleNewTaskVisibility = () => {
     setIsNewTaskVisible(!isNewTaskVisible);
-    dispatch({ type: ACTION_TYPES.RESET });
+    dispatch({ type: ACTION_TYPES.RESET_ERROR });
   };
 
   useEffect(() => {
     const getTasks = async () => {
-      dispatch({ type: ACTION_TYPES.FETCH_START });
+      dispatch({ type: ACTION_TYPES.RESET });
+      dispatch({ type: ACTION_TYPES.GET_TASKS_REQUEST });
 
       const response = await fetch('http://localhost:8000/api/tasks', {
         method: 'GET',
@@ -29,16 +30,18 @@ const Home = () => {
       const data = await response.json();
 
       if (response.ok) {
-        dispatch({ type: ACTION_TYPES.SET_TASKS, payload: data });
+        dispatch({ type: ACTION_TYPES.GET_TASKS_SUCCEED, payload: data });
+      } else {
+        dispatch({ type: ACTION_TYPES.GET_DETAILS_FAILED, payload: data });
       }
     };
 
     getTasks();
   }, [dispatch]);
 
-  return isFetching ? (
-    <Loader />
-  ) : (
+  if (isFetching) return <Loader />;
+
+  return (
     <div className="flex flex-col gap-4 w-full h-full p-4 text-xs">
       {isNewTaskVisible ? (
         <NewTask toggleNewTaskVisibility={toggleNewTaskVisibility} />
@@ -48,6 +51,7 @@ const Home = () => {
         </div>
       )}
       <button
+        id="toggleVisibilityButton"
         type="button"
         onClick={toggleNewTaskVisibility}
         className={`${
