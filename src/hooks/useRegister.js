@@ -5,7 +5,8 @@ const useRegister = () => {
   const { dispatch } = useAuthContext();
 
   const register = async (name, email, password) => {
-    dispatch({ type: ACTION_TYPES.FETCH_START });
+    dispatch({ type: ACTION_TYPES.RESET });
+    dispatch({ type: ACTION_TYPES.REGISTER_REQUEST });
 
     const response = await fetch('http://localhost:8000/api/users/register', {
       method: 'POST',
@@ -19,9 +20,9 @@ const useRegister = () => {
     const data = await response.json();
 
     if (response.ok) {
-      dispatch({ type: ACTION_TYPES.FETCH_SUCCESS, payload: data });
+      dispatch({ type: ACTION_TYPES.REGISTER_SUCCEED, payload: data });
     } else {
-      dispatch({ type: ACTION_TYPES.FETCH_FAILED, payload: data });
+      dispatch({ type: ACTION_TYPES.REGISTER_FAILED, payload: data });
     }
   };
 

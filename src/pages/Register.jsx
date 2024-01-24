@@ -16,7 +16,7 @@ const Register = () => {
   });
   const [visible, setVisible] = useState(false);
   const { register } = useRegister();
-  const { isFetching, isError, errorFields, errorMessage } = useAuthContext();
+  const { isFetching, statusMessage, isError, errorFields, errorMessage } = useAuthContext();
 
   const handleInputChange = (e) => {
     setFormData((prevState) => ({
@@ -40,9 +40,11 @@ const Register = () => {
   const inputWrapperClass = 'border-black bg-white';
   const inputErrorWrapperClass = 'border-red-500 bg-red-100';
 
-  return isFetching ? (
-    <Loader />
-  ) : (
+  if (isFetching) {
+    return <Loader />;
+  }
+
+  return (
     <div className="flex flex-col gap-6 items-center bg-yellow-300 border-2 border-solid border-black p-8">
       <h3 className="text-2xl font-bold">REGISTER</h3>
       <form id="registerForm" onSubmit={handleSubmit} className="flex flex-col gap-3 w-64 text-sm">
@@ -115,6 +117,11 @@ const Register = () => {
         {isError ? (
           <div className="bg-red-100 border-solid border-[1px] border-red-500 text-red-500 font-semibold text-[11px] leading-3 p-2">
             {errorMessage}
+          </div>
+        ) : null}
+        {statusMessage ? (
+          <div className="bg-green-100 border-solid border-[1px] border-green-500 text-green-500 font-semibold text-[11px] leading-3 p-2">
+            {statusMessage}
           </div>
         ) : null}
       </form>
