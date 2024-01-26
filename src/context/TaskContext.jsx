@@ -75,20 +75,6 @@ const taskReducer = (state, action) => {
         errorFields: action.payload?.errorFields,
         errorMessage: action.payload?.message,
       };
-    case ACTION_TYPES.UPDATE_TASK:
-      return {
-        ...state,
-        tasks: state.tasks.map((t) => {
-          if (t._id === action.payload._id) {
-            return { ...t, ...action.payload };
-          }
-          return t;
-        }),
-        isFetching: false,
-        isError: false,
-        errorFields: [],
-        errorMessage: '',
-      };
     case ACTION_TYPES.DELETE_TASK_REQUEST:
       return {
         ...state,
