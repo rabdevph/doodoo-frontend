@@ -13,7 +13,7 @@ const Verify = () => {
     dispatch({ type: ACTION_TYPES.RESET });
     dispatch({ type: ACTION_TYPES.VERIFICATION_REQUEST });
 
-    const response = await fetch(`http://localhost:8000/api/users/verify`, {
+    const response = await fetch(`http://localhost:8000/api/verify`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ const Verify = () => {
     dispatch({ type: ACTION_TYPES.RESET });
     dispatch({ type: ACTION_TYPES.RESEND_VERIFICATION_REQUEST });
 
-    const response = await fetch('http://localhost:8000/api/users/resend-verification', {
+    const response = await fetch('http://localhost:8000/api/verify/resend-verification', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
