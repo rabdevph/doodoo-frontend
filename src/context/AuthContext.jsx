@@ -4,7 +4,7 @@ import { ACTION_TYPES } from '../utils/actionTypes';
 const initialState = {
   user: null,
   email: null,
-  hasSessionToken: false,
+  isSessionActive: false,
   isFetching: false,
   statusMessage: '',
   isError: false,
@@ -65,14 +65,14 @@ const authReducer = (state, action) => {
         ...state,
         user: action.payload.userId,
         email: action.payload.email,
-        hasSessionToken: action.payload.hasSessionToken,
+        isSessionActive: action.payload.isSessionActive,
         isFetching: false,
       };
     case ACTION_TYPES.GET_DETAILS_FAILED:
       return {
         ...state,
         isFetching: false,
-        hasSessionToken: action.payload.hasSessionToken,
+        isSessionActive: action.payload.isSessionActive,
       };
     case ACTION_TYPES.RESET:
       return {
@@ -98,7 +98,7 @@ const AuthContextProvider = ({ children }) => {
       dispatch({ type: ACTION_TYPES.RESET });
       dispatch({ type: ACTION_TYPES.GET_DETAILS_REQUEST });
 
-      const response = await fetch('http://localhost:8000/api/users/session-token', {
+      const response = await fetch('http://localhost:8000/api/users/get-session', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
